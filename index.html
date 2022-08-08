@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="shortcut icon" href="./assets/favicon.ico">
+  <meta name="description" content="SE(3)-Equivariant Relational Rearrangement with Neural Descriptor Fields">
+  <meta name="keywords" content="Robotics,Neural,Fields,Manipulation,Relations">
+  <title>Relational Neural Descriptor Fields</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+  </style>
+  <link rel="stylesheet" href="./assets/font.css">
+  <link rel="stylesheet" href="./assets/main.css">
+</head>
+<body>
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <!--<h1 style="color:white;margin-bottom:0;">NeRF-Supervision</h1> -->
+    <h1 style="color:white;margin-bottom:0;">Relational-NDF</h1>
+    <h2 style="color:white;margin-bottom:0;">SE(3)-Equivariant Relational Rearrangement with <br>Neural Descriptor Fields</h2>
+    <!--<h3 style="color:white;margin-top:0;">Learning Dense Object Descriptors from Neural Radiance Fields</h3> -->
+    <br>
+    <!--
+    <p style="color:white"><a href="https://anthonysimeonov.github.io/">Anthony Simeonov</a><sup>1</sup>, <a href="https://yilundu.github.io/">Yilun Du</a><sup>2</sup>, 
+      <a href="https://yenchenlin.me/">Yen-Chen Lin</a><sup>2</sup>, <a href="https://meche.mit.edu/people/faculty/ALBERTOR@MIT.EDU">Alberto Rodriguez</a><sup>1</sup>, 
+      <a href="https://people.csail.mit.edu/pulkitag/">Pulkit Agrawal</a><sup>1</sup>, <a href="https://people.csail.mit.edu/pulkitag/">Leslie Pack Kaelbling</a><sup>1</sup>,
+      <a href="https://people.csail.mit.edu/pulkitag/">Tomas Lozano Perez</a><sup>1</sup>,
+      <br><sup>1</sup>MIT
+      </p> 
+    -->
+    <p style="color:white"><a href="https://anthonysimeonov.github.io/">Anthony Simeonov*</a>, <a href="https://yilundu.github.io/">Yilun Du*</a>, 
+      <a href="https://yenchenlin.me/">Yen-Chen Lin</a>, <a href="https://meche.mit.edu/people/faculty/ALBERTOR@MIT.EDU">Alberto Rodriguez</a>, <br>
+      <a href="https://people.csail.mit.edu/pulkitag/">Pulkit Agrawal</a>, <a href="http://people.csail.mit.edu/lpk/">Leslie Pack Kaelbling</a>,
+      <a href="http://people.csail.mit.edu/tlp/">Tomas Lozano Perez</a>
+      <br>MIT<br>(* indicates equal contribution)</p>
+    <br>
+  </div>
+</div>
+  
+<div class="container text-center">    
+<!--<div class="container bg-3">  -->
+  <!--<div class="row text-center">-->
+  <div class="text-center">
+    <!--<div class="col-sm-2 col-sm-offset-1">-->
+    <div class="col-sm-2 col-sm-offset-4">
+      <a href="https://www.youtube.com/watch?v=_zN-wVwPH1s"><img height="78" width="120" src="./assets/video-thumb.png" data-nothumb="" style="border: 1px solid;"><br>Real-world<br>Results<br></a>
+    </div>
+    <div class="col-sm-2">
+      <a href="https://arxiv.org/abs/2203.01913"><img height="100" width="78" src="./assets/paper-thumb.png" data-nothumb="" style="border: 1px solid"><br>arXiv 2022<br>Paper<br></a>
+    </div>
+    <!--
+    <div class="col-sm-2">
+      <a href="https://www.icloud.com/keynote/0f5dEmQJx01IvYyBA0xhepAaA#nerf-supervision-public"><img height="78" width="120" src="./assets/slides-thumb.png" data-nothumb="" style="border: 1px solid"><br>Keynote<br>Slides<br></a>
+    </div>
+    <div class="col-sm-2"">
+      <a href="https://github.com/yenchenlin/nerf-supervision-public"><img height="100" width="78" src="./assets/netdissect_code.png" data-nothumb="" style="border: 1px solid"><br>Source Code<br>Github</a>
+    </div>
+    <div class="col-sm-2"">
+      <a href="https://colab.research.google.com/drive/13ISri5KD2XeEtsFs25hmZtKhxoDywB5y?usp=sharing"><img height="78" width="120" src="./assets/colab-thumb.png" data-nothumb="" style="border: 1px solid"><br>Demo Colab:<br>Correspondence from NeRF</a>
+    </div>
+      -->
+  </div>
+</div><br>
+
+<div class="container bg-3">
+  <div class="row">
+    <h2 class="text-center">Real robot results video</h2>
+    <hr>
+    <div class="col-sm-12 text-center" style="margin-top: 1em;">
+      <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/_zN-wVwPH1s?rel=0" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container bg-3">
+  <div class="row">
+    <h2 class="text-center"></h2>
+  </div>
+  <p>
+We present a framework for specifying tasks involving spatial relations between objects using only ~5-10 demonstrations and then executing such tasks given point cloud observations of a novel pair of objects in arbitrary initial poses. 
+Our method uses Neural Descriptor Fields (NDFs) to achieve this by assigning a consistent local coordinate frame to the task-relevant parts of objects in demonstrations and localizing the corresponding coordinate frame on unseen object instances. 
+We propose an optimization method that uses multiple NDFs and a <i>single</i> annotated 3D keypoint in <i>one</i> of the demonstrations, to directly assign a set of consistent coordinate frames to the task-relevant object parts. 
+We also propose an energy-based learning scheme to model the joint configuration of the objects that satisfies a desired relational task. 
+We validate our pipeline on three multi-object rearrangement tasks in simulation and on a real robot. 
+Results demonstrate that our method can infer relative transformations that satisfy the desired relation between novel objects in unseen initial poses using just a few demonstrations.
+  </p>
+  <br>
+  <!--
+  <div class="row">
+    <div class="col-sm-6 text-center">
+      <p><b>Input RGB & Output Masks / Dense Descriptors</b></p>
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/perception.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>    </div>
+    <div class="col-sm-6 text-center">
+      <p><b>6-DoF Grasping of Forks</b></p>
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/grasp_forks_human.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</div><br>
+
+<div class="container bg-3">
+  <div class="row">
+    <h2 class="text-center">Method</h2>
+    <hr />
+    <div class="col-sm-12 text-center">
+      <img src="./assets/method.png" class="img-responsive" style="width:100%" alt="Image">
+    </div>
+  </div>
+  <p>
+    The pipeline consists of three stages: (a) We collect RGB images of the object of interest and optimize a NeRF for that object; 
+    (b) The recovered NeRF’s density field is then used to automatically generated dataset of dense correspondences; 
+    (c) We use the generated dataset to train a model to estimate dense object descriptors,and evaluate that model on previously-unobserved real images.
+    <br><br>
+    In the following, we show NeRF's rendered RGB and depth images along with the dense descriptors predicted by our model. The dense descriptors
+    are invariant to the viewpoint, allowing the robot to track object's parts.
+  </p>
+  <div class="col-sm-4 text-center">
+    <p><b>NeRF's RGB</b></p>
+  </div>
+  <div class="col-sm-4 text-center">
+    <p><b>NeRF's Depth</b></p>
+  </div>
+  <div class="col-sm-4 text-center">
+    <p><b>Dense Descriptors</b></p>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/output.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div><br>
+  <p>
+    For comparison, we show the mesh reconstructed by COLMAP, a widely used Multi-view Stereo library.
+    The reconstructed mesh has many holes (in blue color) and can't be used to generate correct correspondences for learning descriptors.
+    We also show the pointcloud captured by a RealSense D415, a commonly used RGB-D camera. Again, there exist many holes (black color) and
+    the geometry is wrong.
+  </p>
+  <div class="row">
+    <div class="col-sm-4 col-sm-offset-2 text-center">
+      <p><b>COLMAP's Reconstruction</b></p>
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/colmap_fork.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="col-sm-4 text-center">
+      <p><b>RGBD Camera's Pointcloud</b></p>
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/fork-rgbd.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</div><br>
+
+<div class="container bg-3">
+  <div class="row">
+    <h2 class="text-center">Demo Colab</h2>
+    <hr />
+    <div class="col-sm-12 text-center">
+      <video autoplay loop muted playsinline class="img-responsive" controls>
+        <source src="./assets/colab_demo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+  <br>
+  <p>
+    We provide <a href="https://colab.research.google.com/drive/13ISri5KD2XeEtsFs25hmZtKhxoDywB5y?usp=sharing">an interactive tool</a> to inspect the correspondence dataset generated by NeRF-Supervision. By clicking on a pixel in the left image,
+    the tool will visualize multiple corresponding pixels in the right image. We note that there could be more than one corresponding pixels and their opacities are weighted by densities predicted by NeRFs.
+  </p>
+</div><br>
+
+<div class="container bg-3">    
+  <div class="row">
+    <h2 class="text-center">More Results</h2>
+    <hr />
+  </div>
+
+  <p>
+    <b>Generalization.</b> We show 6-DoF grasping of objects that are unseen during training.
+  </p>
+  <br>
+  <div class="row">
+    <div class="col-sm-6 text-center">
+      <p><b>Strainers</b></p>
+      <video class="img-responsive" controls>
+        <source src="./assets/grasp_multi_strainers.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="col-sm-6 text-center">
+      <p><b>Forks</b></p>
+      <video class="img-responsive" controls>
+        <source src="./assets/grasp_multi_forks.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <hr>
+
+  <p>
+    <b>Robustness.</b> We show 6-DoF grasping with out-of-distribution background.
+  </p>
+  <br>
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3 text-center">
+      <p><b>Strainers</b></p>
+      <video class="img-responsive" controls>
+        <source src="./assets/grasp_strainer_background.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</div><br>
+-->
+
+<div class="container bg-3">    
+  <div class="row">
+    <h2 class="text-center">Citation</h2>
+    <hr />
+    <div class="alert alert-warning citation">
+        @inproceedings{simeonov2022relationalndf,<br>
+        &nbsp;&nbsp;title={SE(3)-Equivariant Relational Rearrangement with Neural Descriptor Fields},<br>
+        &nbsp;&nbsp;author={Anthony Simeonov and Yilun Du and Lin Yen-Chen and Alberto Rodriguez and Pulkit Agrawal and Leslie P. Kaelbling and Tomas Lozano-Perez},<br>
+        &nbsp;&nbsp;booktitle={arXiv},<br>
+        &nbsp;&nbsp;year={2022}<br>
+        }
+    </div>
+  </div>
+</div><br><br>
+
+</body>
+</html>
+
